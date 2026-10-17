@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
           
           {/* Brand info */}
-          <div className="space-y-4 md:col-span-2">
+          <div className="space-y-4 md:col-span-1">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-purple to-brand-cyan flex items-center justify-center p-0.5">
                 <div className="w-full h-full bg-petdark-950 rounded-[6px] flex items-center justify-center">
@@ -22,12 +22,12 @@ export default function Footer() {
                 PETLINGO <span className="text-brand-cyan">IA</span>
               </span>
             </div>
-            <p className="max-w-md text-slate-400 leading-relaxed">
-              Pioneros en biometría y decodificación emocional animal asistida por Inteligencia Artificial. Creado con pasión por las mascotas desde Ibarra, Imbabura, para todo el territorio ecuatoriano.
+            <p className="text-slate-400 leading-relaxed text-xs">
+              Biometría y decodificación emocional animal con Inteligencia Artificial. Desde Ibarra, Imbabura, para todo el Ecuador.
             </p>
-            <div className="flex items-center space-x-2 text-slate-300">
+            <div className="flex items-center space-x-2 text-slate-300 text-xs">
               <MapPin className="w-4 h-4 text-brand-cyan shrink-0" />
-              <span>Ibarra, Ecuador • Envíos nacionales con Servientrega</span>
+              <span>Ibarra, Ecuador • Envíos Servientrega</span>
             </div>
           </div>
 
@@ -39,6 +39,29 @@ export default function Footer() {
               <li><a href="#beneficios" className="hover:text-brand-cyan transition-colors">Tecnología & Sensores</a></li>
               <li><a href="#calificar" className="hover:text-brand-cyan transition-colors">Calificar Mi Mascota</a></li>
               <li><a href="#preguntas" className="hover:text-brand-cyan transition-colors">Preguntas Frecuentes</a></li>
+            </ul>
+          </div>
+
+          {/* Legal & Compliance (LOPDP Ecuador) */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">Legal & Privacidad</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link href="/privacidad" className="hover:text-brand-cyan transition-colors flex items-center gap-1.5 text-slate-300">
+                  <ShieldCheck className="w-3.5 h-3.5 text-brand-cyan shrink-0" />
+                  <span>Política de Privacidad</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/terminos" className="hover:text-brand-cyan transition-colors text-slate-300">
+                  <span>Términos y Condiciones</span>
+                </Link>
+              </li>
+              <li className="pt-1">
+                <span className="text-[10px] inline-block px-2 py-0.5 rounded bg-brand-cyan/10 border border-brand-cyan/20 text-brand-cyan font-semibold">
+                  Cumple con LOPDP Ecuador
+                </span>
+              </li>
             </ul>
           </div>
 
@@ -70,7 +93,13 @@ export default function Footer() {
 
         <div className="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-slate-500 text-[11px] gap-4">
           <p>© {new Date().getFullYear()} PETLINGO IA. Todos los derechos reservados. Ibarra, Ecuador.</p>
-          <p className="text-slate-400">Desarrollado para Pet Parents conscientes y comprometidos.</p>
+          <div className="flex items-center space-x-4 text-slate-400">
+            <Link href="/privacidad" className="hover:text-white transition-colors">Privacidad LOPDP</Link>
+            <span>•</span>
+            <Link href="/terminos" className="hover:text-white transition-colors">Términos de Preventa</Link>
+            <span>•</span>
+            <a href="#calificar" className="hover:text-white transition-colors">Lote Fundador</a>
+          </div>
         </div>
       </div>
     </footer>

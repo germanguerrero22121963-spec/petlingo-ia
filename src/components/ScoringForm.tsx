@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { 
   Sparkles, 
   Send, 
@@ -42,6 +43,7 @@ export default function ScoringForm() {
 
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [leadResult, setLeadResult] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -51,6 +53,11 @@ export default function ScoringForm() {
 
     if (!formData.fullName.trim() || !formData.phone.trim()) {
       setErrorMsg('Por favor completa tu nombre y número de WhatsApp.');
+      return;
+    }
+
+    if (!acceptedTerms) {
+      setErrorMsg('Debes aceptar la Política de Privacidad y el tratamiento de datos conforme a la LOPDP para continuar.');
       return;
     }
 
@@ -348,6 +355,30 @@ export default function ScoringForm() {
                     />
                   </div>
                 </div>
+              </div>
+
+              {/* Bloque 4: Consentimiento Informado LOPDP */}
+              <div className="pt-2 border-t border-slate-800">
+                <label className="flex items-start space-x-3 text-xs text-slate-300 cursor-pointer select-none bg-petdark-900/40 p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 transition-colors">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={acceptedTerms}
+                    onChange={(e) => setAcceptedTerms(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-slate-700 bg-petdark-950 text-brand-cyan focus:ring-brand-cyan focus:ring-offset-petdark-950 accent-cyan-500 shrink-0 cursor-pointer"
+                  />
+                  <span className="leading-relaxed">
+                    He leído y acepto la{' '}
+                    <Link href="/privacidad" target="_blank" className="text-brand-cyan hover:underline font-bold">
+                      Política de Privacidad
+                    </Link>{' '}
+                    y los{' '}
+                    <Link href="/terminos" target="_blank" className="text-brand-cyan hover:underline font-bold">
+                      Términos de Preventa
+                    </Link>
+                    . Autorizo el tratamiento de mis datos personales para ser contactado sobre mi cupo en Petlingo IA de conformidad con la <strong>Ley Orgánica de Protección de Datos Personales (LOPDP)</strong> de Ecuador.
+                  </span>
+                </label>
               </div>
 
               {/* Mensaje de error si falla validación */}

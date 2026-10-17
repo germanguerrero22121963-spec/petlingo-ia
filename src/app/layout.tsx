@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import CookieBanner from '@/components/CookieBanner';
 
 export const metadata: Metadata = {
   title: 'PETLINGO IA | El Primer Collar Inteligente que Traduce a tu Mascota',
@@ -33,6 +34,7 @@ export default function RootLayout({
     <html lang="es" className="scroll-smooth">
       <body className="antialiased selection:bg-brand-violet selection:text-white">
         {children}
+        <CookieBanner />
       </body>
     </html>
   );
