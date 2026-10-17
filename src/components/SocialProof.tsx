@@ -83,6 +83,33 @@ export default function SocialProof() {
           ))}
         </div>
 
+        {/* Grid de Estadísticas y Cobertura Nacional */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 pt-10 border-t border-slate-800/80">
+          <div className="glass-card rounded-2xl p-5 text-center border border-slate-800">
+            <div className="text-2xl sm:text-3xl font-black text-brand-cyan mb-1">220+</div>
+            <div className="text-xs font-bold text-white mb-0.5">Clínicas y Pet Shops</div>
+            <div className="text-[11px] text-slate-400">Mapeados en todo el Ecuador</div>
+          </div>
+
+          <div className="glass-card rounded-2xl p-5 text-center border border-slate-800">
+            <div className="text-2xl sm:text-3xl font-black text-brand-violet mb-1">98.4%</div>
+            <div className="text-xs font-bold text-white mb-0.5">Precisión de Algoritmo</div>
+            <div className="text-[11px] text-slate-400">Detección temprana de dolor y estrés</div>
+          </div>
+
+          <div className="glass-card rounded-2xl p-5 text-center border border-slate-800">
+            <div className="text-2xl sm:text-3xl font-black text-emerald-400 mb-1">14 Días</div>
+            <div className="text-xs font-bold text-white mb-0.5">Autonomía de Batería</div>
+            <div className="text-[11px] text-slate-400">Monitoreo 24/7 sin recargas diarias</div>
+          </div>
+
+          <div className="glass-card rounded-2xl p-5 text-center border border-slate-800">
+            <div className="text-2xl sm:text-3xl font-black text-amber-400 mb-1">100%</div>
+            <div className="text-xs font-bold text-white mb-0.5">Envíos a Todo Ecuador</div>
+            <div className="text-[11px] text-slate-400">Desde Ibarra a cualquier provincia</div>
+          </div>
+        </div>
+
       </div>
     </section>
   );

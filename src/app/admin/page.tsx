@@ -20,7 +20,8 @@ import {
   Filter,
   Save,
   MapPin,
-  Heart
+  Heart,
+  Download
 } from 'lucide-react';
 import { Lead, LeadStatus, LeadTemperature } from '@/types/database';
 
@@ -37,6 +38,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'B2C' | 'B2B'>('B2C');
   const [b2bLeads, setB2bLeads] = useState<any[]>([]);
   const [b2bSearch, setB2bSearch] = useState('');
+  const [b2bCityFilter, setB2bCityFilter] = useState('ALL');
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
   const [tempNotes, setTempNotes] = useState<{ [id: string]: string }>({});
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -140,6 +142,14 @@ export default function AdminDashboard() {
   const warmCount = leads.filter((l) => l.temperature === 'WARM').length;
   const coldCount = leads.filter((l) => l.temperature === 'COLD').length;
   const pendingCount = leads.filter((l) => l.status === 'PENDIENTE').length;
+
+  // Conteo de ciudades B2B
+  const b2bCityCounts: { [key: string]: number } = {};
+  b2bLeads.forEach((l) => {
+    const c = l.city || 'Ecuador';
+    b2bCityCounts[c] = (b2bCityCounts[c] || 0) + 1;
+  });
+  const b2bUniqueCities = Object.keys(b2bCityCounts).sort((a, b) => b2bCityCounts[b] - b2bCityCounts[a]);
 
   if (!isAuthenticated) {
     return (
@@ -272,38 +282,85 @@ export default function AdminDashboard() {
 
       {activeTab === 'B2B' ? (
         <div className="max-w-7xl mx-auto space-y-4 pt-6">
-          <div className="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <span>Directorio B2B Extraído con Apify (Google Maps)</span>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30">
-                  {b2bLeads.length} Establecimientos
-                </span>
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Clínicas veterinarias y pet shops en Ibarra y Quito para acuerdos de distribución, preventa y puntos de exhibición de Petlingo IA.
-              </p>
+          <div className="glass-card rounded-2xl p-5 border border-slate-800 space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <span>Directorio B2B Extraído con Apify (Google Maps)</span>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30">
+                    {b2bLeads.length} Establecimientos Nacionales
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Clínicas veterinarias y pet shops en todo el Ecuador (Ibarra, Quito, Cuenca, Guayaquil, Loja, Machala, Santo Domingo, etc.) para acuerdos de distribución y preventa de Petlingo IA.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <a
+                  href="/api/b2b-leads?download=csv"
+                  download="directorio_veterinarias_ecuador_petlingo.csv"
+                  className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-500/30 text-xs font-bold transition-colors whitespace-nowrap shadow-sm"
+                  title="Descargar base de datos nacional en CSV"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Exportar CSV</span>
+                </a>
+
+                <div className="relative w-full sm:w-64">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Buscar veterinaria, ciudad..."
+                    value={b2bSearch}
+                    onChange={(e) => setB2bSearch(e.target.value)}
+                    className="w-full bg-petdark-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-cyan"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="relative w-full sm:w-72">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                placeholder="Buscar veterinaria, ciudad..."
-                value={b2bSearch}
-                onChange={(e) => setB2bSearch(e.target.value)}
-                className="w-full bg-petdark-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-cyan"
-              />
+            {/* Filtros de Ciudad */}
+            <div className="flex flex-wrap items-center gap-1.5 pt-3 border-t border-slate-800/80">
+              <span className="text-[11px] text-slate-400 font-semibold mr-1">Ciudad:</span>
+              <button
+                onClick={() => setB2bCityFilter('ALL')}
+                className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-colors ${
+                  b2bCityFilter === 'ALL'
+                    ? 'bg-brand-cyan text-slate-950 shadow-sm'
+                    : 'bg-slate-800/80 text-slate-400 hover:text-white border border-slate-700'
+                }`}
+              >
+                Todas ({b2bLeads.length})
+              </button>
+              {b2bUniqueCities.map((city) => (
+                <button
+                  key={city}
+                  onClick={() => setB2bCityFilter(city)}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                    b2bCityFilter === city
+                      ? 'bg-brand-cyan text-slate-950 font-bold shadow-sm'
+                      : 'bg-slate-800/80 text-slate-400 hover:text-white border border-slate-700'
+                  }`}
+                >
+                  {city} ({b2bCityCounts[city]})
+                </button>
+              ))}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {b2bLeads
-              .filter((item) =>
-                item.name.toLowerCase().includes(b2bSearch.toLowerCase()) ||
-                item.address.toLowerCase().includes(b2bSearch.toLowerCase()) ||
-                item.city.toLowerCase().includes(b2bSearch.toLowerCase())
-              )
+              .filter((item) => {
+                const matchesSearch =
+                  item.name.toLowerCase().includes(b2bSearch.toLowerCase()) ||
+                  item.address.toLowerCase().includes(b2bSearch.toLowerCase()) ||
+                  item.city.toLowerCase().includes(b2bSearch.toLowerCase());
+                const matchesCity =
+                  b2bCityFilter === 'ALL' ||
+                  (item.city && item.city.toLowerCase() === b2bCityFilter.toLowerCase());
+                return matchesSearch && matchesCity;
+              })
               .map((place) => {
                 const cleanPhone = place.phone ? place.phone.replace(/[^0-9]/g, '') : '';
                 const waNumber = cleanPhone.startsWith('0')

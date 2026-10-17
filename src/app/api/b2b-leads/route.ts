@@ -2,8 +2,25 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const download = searchParams.get('download');
+
+    if (download === 'csv') {
+      const csvPath = path.join(process.cwd(), 'data', 'pet_shops_ecuador.csv');
+      if (fs.existsSync(csvPath)) {
+        const fileContent = fs.readFileSync(csvPath, 'utf-8');
+        return new NextResponse(fileContent, {
+          status: 200,
+          headers: {
+            'Content-Disposition': 'attachment; filename="directorio_veterinarias_ecuador_petlingo.csv"',
+            'Content-Type': 'text/csv; charset=utf-8',
+          },
+        });
+      }
+    }
+
     const filePath = path.join(process.cwd(), 'data', 'pet_shops_ecuador.json');
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf-8');
