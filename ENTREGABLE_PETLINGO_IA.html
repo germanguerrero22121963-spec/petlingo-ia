@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Entregable Académico - PETLINGO IA</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 20mm 15mm 20mm 15mm;
+    }
+    body {
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.5;
+      font-size: 11pt;
+      margin: 0;
+      padding: 0;
+    }
+    .cover {
+      page-break-after: always;
+      text-align: center;
+      padding-top: 50px;
+    }
+    .cover-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      border-radius: 20px;
+      font-size: 10pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 25px;
+    }
+    h1.project-title {
+      font-size: 28pt;
+      color: #0f172a;
+      margin: 0 0 10px 0;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+    .project-subtitle {
+      font-size: 14pt;
+      color: #475569;
+      max-width: 650px;
+      margin: 0 auto 40px auto;
+      line-height: 1.4;
+    }
+    .meta-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 500px;
+      margin: 0 auto 50px auto;
+      text-align: left;
+      font-size: 10.5pt;
+    }
+    .meta-box table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .meta-box td {
+      padding: 6px 0;
+    }
+    .meta-box td.label {
+      font-weight: 700;
+      color: #64748b;
+      width: 40%;
+    }
+    .meta-box td.val {
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .section-title {
+      font-size: 16pt;
+      color: #0f172a;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 6px;
+      margin-top: 30px;
+      margin-bottom: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    h3 {
+      font-size: 12.5pt;
+      color: #1e3a8a;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+    p {
+      margin: 0 0 12px 0;
+      text-align: justify;
+    }
+    .alert-card {
+      background: #f1f5f9;
+      border-left: 4px solid #2563eb;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 16px;
+      font-size: 10.5pt;
+    }
+    .alert-card.pain {
+      background: #fef2f2;
+      border-left-color: #ef4444;
+    }
+    .alert-card.delight {
+      background: #f0fdf4;
+      border-left-color: #22c55e;
+    }
+    .quote-box {
+      background: #faf5ff;
+      border-left: 4px solid #9333ea;
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 10px;
+      font-style: italic;
+      color: #3b0764;
+      font-size: 10pt;
+    }
+    .quote-author {
+      display: block;
+      font-style: normal;
+      font-weight: 700;
+      color: #6b21a8;
+      font-size: 9pt;
+      margin-top: 4px;
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      margin-bottom: 20px;
+      font-size: 9pt;
+    }
+    table.data-table th, table.data-table td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 10px;
+      text-align: left;
+    }
+    table.data-table th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    table.data-table tr:nth-child(even) {
+      background: #f8fafc;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 8pt;
+      font-weight: 700;
+    }
+    .badge-pain {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .badge-delight {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .script-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 14px;
+      background: #ffffff;
+      margin-bottom: 16px;
+    }
+    .script-step {
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #e2e8f0;
+    }
+    .script-step:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .step-time {
+      font-weight: 800;
+      color: #2563eb;
+      font-size: 9pt;
+      text-transform: uppercase;
+    }
+    .page-break {
+      page-break-after: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PORTADA -->
+  <div class="cover">
+    <div class="cover-badge">Investigación de Mercado & Factoría de Creativos TOFU</div>
+    <h1 class="project-title">PETLINGO IA</h1>
+    <div class="project-subtitle">
+      Ingeniería Inversa del Dolor, Scraping de Fricción en Apify y Estrategia de Conversión para el Primer Collar Inteligente con IA en Ecuador
+    </div>
+
+    <div class="meta-box">
+      <table>
+        <tr>
+          <td class="label">Sede del Proyecto:</td>
+          <td class="val">Ibarra, Imbabura (Ecuador)</td>
+        </tr>
+        <tr>
+          <td class="label">Nicho de Mercado:</td>
+          <td class="val">Pet Tech • Collares Inteligentes con IA</td>
+        </tr>
+        <tr>
+          <td class="label">Herramienta de Scraping:</td>
+          <td class="val">Apify (Google Maps Scraper Actor)</td>
+        </tr>
+        <tr>
+          <td class="label">Muestra Analizada:</td>
+          <td class="val">69 Reseñas Públicas Reales (Ibarra y Quito)</td>
+        </tr>
+        <tr>
+          <td class="label">Entregable:</td>
+          <td class="val">Moodle - Documento Oficial de Aplicación</td>
+        </tr>
+        <tr>
+          <td class="label">Fecha:</td>
+          <td class="val">Octubre 2026</td>
+        </tr>
+      </table>
+    </div>
+
+    <p style="text-align: center; color: #64748b; font-size: 10pt;">
+      Documento generado mediante análisis agéntico en Antigravity con datos extraídos en tiempo real.
+    </p>
+  </div>
+
+  <!-- PASO 1: EXTRACCIÓN DE DATOS -->
+  <div>
+    <h2 class="section-title">Paso 1: Extracción de Datos (Scraping de Fricción con Apify)</h2>
+    
+    <p>
+      Para este estudio se seleccionó el nicho de <strong>clínicas veterinarias y centros de atención a mascotas en Ecuador</strong>, tomando como epicentro la ciudad de <strong>Ibarra</strong> (sede de la marca) y el principal corredor de expansión en <strong>Quito</strong>.
+    </p>
+
+    <div class="alert-card">
+      <strong>Ficha Técnica de la Extracción:</strong><br>
+      • <strong>Actor en Apify:</strong> <code>compass/crawler-google-places</code>.<br>
+      • <strong>Establecimientos analizados:</strong> Dogtopia Clínica Veterinaria (Ibarra), Hospital Veterinario Save (Ibarra), Veterinaria Zúñiga (Ibarra), Clínica Veterinaria Brasil (Quito).<br>
+      • <strong>Muestra recopilada:</strong> 69 reseñas públicas detalladas con texto íntegro.<br>
+      • <strong>Archivos exportados:</strong> <code>data/dataset_resenas_friccion.csv</code> y <code>data/dataset_resenas_friccion.json</code>.<br>
+      • <strong>Segmentación:</strong> Reseñas críticas (1 a 3 estrellas) para detectar fricción/dolor, y reseñas de 5 estrellas para identificar expectativas cumplidas.
+    </div>
+
+    <h3>Muestra Representativa de Reseñas Extraídas (Dataset)</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 12%;">ID</th>
+          <th style="width: 25%;">Establecimiento / Ciudad</th>
+          <th style="width: 15%;">Tipo / Estrellas</th>
+          <th>Comentario Textual del Cliente</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>rev-4</code></td>
+          <td>Dogtopia<br><small>Ibarra</small></td>
+          <td><span class="badge badge-pain">CRÍTICA (1★)</span></td>
+          <td>"La veterinaria cogida el teléfono más que a mi perro me mandó su diagnóstico y nunca mejoró del todo... mi perra pasó todo el mes mal por causa de un diagnóstico que era tan fácil de detectar solo revisándola."</td>
+        </tr>
+        <tr>
+          <td><code>rev-3</code></td>
+          <td>Dogtopia<br><small>Ibarra</small></td>
+          <td><span class="badge badge-pain">CRÍTICA (1★)</span></td>
+          <td>"Lleve a esterilizar a mi gatita le dieron una mala dosis y murió."</td>
+        </tr>
+        <tr>
+          <td><code>rev-43</code></td>
+          <td>Vet. Zúñiga<br><small>Ibarra</small></td>
+          <td><span class="badge badge-pain">CRÍTICA (1★)</span></td>
+          <td>"En una emergencia con mi perrita me dicen que puedo acercarme a su local sin problema y al momento de llegar, a pesar de timbrar varias veces, jamás salieron a atender."</td>
+        </tr>
+        <tr>
+          <td><code>rev-65</code></td>
+          <td>Vet. Brasil<br><small>Quito</small></td>
+          <td><span class="badge badge-pain">CRÍTICA (1★)</span></td>
+          <td>"Tuve una emergencia y nadie nos ayudó, la única respuesta fue 'veale cómo sigue' cuando el perrito estuvo súper delicado y tuvo que ser hospitalizado."</td>
+        </tr>
+        <tr>
+          <td><code>rev-19</code></td>
+          <td>Hospital Save<br><small>Ibarra</small></td>
+          <td><span class="badge badge-pain">CRÍTICA (1★)</span></td>
+          <td>"Los señores solo saben lo básico cuando ya tiene un problema más delicado no saben cómo intervenir y no es primera vez."</td>
+        </tr>
+        <tr>
+          <td><code>rev-5</code></td>
+          <td>Dogtopia<br><small>Ibarra</small></td>
+          <td><span class="badge badge-delight">DELEITE (5★)</span></td>
+          <td>"Mi perro ingresó a emergencia... hicieron todos los análisis pertinentes, jaulas con temperatura regulable. Lograron salvar al perrito y ahora vive feliz gracias a este establecimiento!"</td>
+        </tr>
+        <tr>
+          <td><code>rev-9</code></td>
+          <td>Dogtopia<br><small>Ibarra</small></td>
+          <td><span class="badge badge-delight">DELEITE (5★)</span></td>
+          <td>"Lo más importante es el seguimiento que le hacen a sus pacientes atentos a su evolución y proceso de sanación adaptándose a la edad geriátrica."</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PASO 2: INGENIERÍA INVERSA DEL DOLOR -->
+  <div>
+    <h2 class="section-title">Paso 2: Ingeniería Inversa del Dolor (Análisis LLM)</h2>
+    
+    <p>
+      El procesamiento semántico de los testimonios recopilados en Apify reveló que la mayor angustia de los tutores en Ecuador no es el costo económico, sino la <strong>asimetría de información y la incertidumbre de no saber lo que su mascota siente a tiempo</strong>.
+    </p>
+
+    <h3>1. Los 3 Dolores Principales (Core Pains)</h3>
+
+    <div class="alert-card pain">
+      <strong>Dolor 1: Ceguera Diagnóstica y Desatención en la Consulta Presencial</strong><br>
+      Los clientes denuncian frustración cuando los profesionales hacen consultas superficiales o "pasan pegados al celular", emitiendo tratamientos a ciegas. Los tutores sienten que su mascota pasó semanas sufriendo porque nadie detectó un malestar evidente en su cuerpo.
+    </div>
+
+    <div class="alert-card pain">
+      <strong>Dolor 2: Abandono y Desesperación en Emergencias (La falacia del 24/7)</strong><br>
+      Múltiples testimonios en Ibarra y Quito relatan llegar de madrugada con una mascota convulsionando o quejándose para encontrar puertas cerradas o recibir la respuesta: <em>"véale cómo sigue"</em>. El dueño se siente completamente impotente y culpable de no haber intervenido horas antes.
+    </div>
+
+    <div class="alert-card pain">
+      <strong>Dolor 3: Detección Tardía por la Naturaleza Silenciosa del Animal</strong><br>
+      Especialmente en gatos y perros adultos, los tutores descubren la enfermedad cuando ya es terminal o requiere hospitalización invasiva, debido a que el animal oculta su debilidad por instinto.
+    </div>
+
+    <h3>2. El Vocabulario del Consumidor (5 Frases Textuales Reales)</h3>
+    <p>Frases extraídas directamente del dataset de Apify que reflejan la voz real del cliente ecuatoriano:</p>
+
+    <div class="quote-box">
+      "La veterinaria cogida el teléfono más que a mi perro... mi perra pasó todo el mes mal por causa de un diagnóstico que era tan fácil de detectar solo revisándola."
+      <span class="quote-author">— Lennin Amaya (Ibarra, Reseña en Dogtopia)</span>
+    </div>
+
+    <div class="quote-box">
+      "Tuve una emergencia y nadie nos ayudó, la única respuesta fue 'veale cómo sigue' cuando el perrito estuvo súper delicado..."
+      <span class="quote-author">— MaSol Velasco Ruiz (Quito, Reseña en Clínica Brasil)</span>
+    </div>
+
+    <div class="quote-box">
+      "En una emergencia con mi perrita me dicen que puedo acercarme a su local sin problema y al momento de llegar, a pesar de timbrar varias veces, jamás salieron a atender."
+      <span class="quote-author">— Lenin (Ibarra, Reseña en Veterinaria Zúñiga)</span>
+    </div>
+
+    <div class="quote-box">
+      "Los señores solo saben lo básico cuando ya tiene un problema más delicado no saben cómo intervenir..."
+      <span class="quote-author">— An Al (Ibarra, Reseña en Hospital Save)</span>
+    </div>
+
+    <div class="quote-box">
+      "Lleve a esterilizar a mi gatita le dieron una mala dosis y murió."
+      <span class="quote-author">— Inayaxddd (Ibarra, Reseña en Dogtopia)</span>
+    </div>
+
+    <h3>3. Propuesta Única de Valor Inversa (UVP Inversa)</h3>
+    <div class="alert-card delight">
+      <strong>Propuesta de Valor de PETLINGO IA:</strong><br>
+      <em>"No dependas de la suerte ni esperes a que tu mascota colapse para saber que algo anda mal. <strong>PETLINGO IA</strong> es el collar inteligente con Inteligencia Artificial que traduce las 24 horas del día la postura, biometría y micro-estados de dolor y ansiedad de tu perro o gato directamente a tu celular. Te entregamos datos médicos y emocionales objetivos para que nunca más te digan 'véale cómo sigue' ni te atiendan a ciegas."</em>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- PASO 3: FACTORÍA DE CREATIVOS TOFU -->
+  <div>
+    <h2 class="section-title">Paso 3: Factoría de Creativos TOFU</h2>
+    <p>Creativos de atracción (Top of the Funnel) diseñados a partir de los dolores exactos descubiertos en el scraping.</p>
+
+    <h3>1. Tres Copys Estructurados con Fórmula PAS (Problema - Agitación - Solución)</h3>
+
+    <!-- Copy 1 -->
+    <div class="script-box">
+      <div style="font-weight: 800; color: #2563eb; margin-bottom: 6px;">COPY 1: Ángulo "Diagnóstico Tardío y Consulta a Ciegas" (Público General)</div>
+      <p><strong>[Problema]:</strong> ¿Alguna vez llevaste a tu perro a la veterinaria y sentiste que saliste con más dudas que respuestas mientras él seguía decaído?</p>
+      <p><strong>[Agitación]:</strong> Tu perro no puede hablar para decirte: <em>"Mamá, me duele la cadera"</em> o <em>"Tengo náuseas"</em>. Por instinto, oculta el dolor hasta que ya no puede más. Para cuando notas que no come o no se levanta, lo que era un problema de $15 se convierte en una hospitalización de urgencia de cientos de dólares y noches enteras de culpa.</p>
+      <p><strong>[Solución]:</strong> Deja de adivinar y comienza a entenderlo. Presentamos <strong>PETLINGO IA</strong>, el collar inteligente diseñado en Ecuador que decodifica cada movimiento, respiración y quejido sutil de tu mascota mediante Inteligencia Artificial, enviando alertas preventivas directamente a tu teléfono.</p>
+      <p><strong>[CTA]:</strong> 👉 <strong>Haz clic abajo y completa la breve evaluación de 1 minuto para saber si tu mascota califica para el Lote Exclusivo de Preventa con 30% de descuento.</strong></p>
+    </div>
+
+    <!-- Copy 2 -->
+    <div class="script-box">
+      <div style="font-weight: 800; color: #2563eb; margin-bottom: 6px;">COPY 2: Ángulo "La Emergencia Nocturna y la Impotencia del 24/7" (Emocional Fuerte)</div>
+      <p><strong>[Problema]:</strong> Son las 2:00 AM. Tu mascota no para de llorar, tocas las puertas de las clínicas que dicen "atención 24 horas" y nadie responde.</p>
+      <p><strong>[Agitación]:</strong> El peor sentimiento del mundo es mirar a los ojos a ese ser que amas como a un hijo y no tener idea de qué le duele ni cómo ayudarlo mientras el tiempo corre. ¿Por qué esperar a llegar a una sala de emergencias cuando podrías haber detectado la anomalía 72 horas antes?</p>
+      <p><strong>[Solución]:</strong> <strong>PETLINGO IA</strong> es el monitor de salud y bienestar continuo que nunca duerme. La IA analiza sus patrones de sueño, marcha y frecuencia respiratoria. Si detecta fiebre, espasmos o estrés severo, te avisa en el instante exacto con datos clínicos reales en tu pantalla.</p>
+      <p><strong>[CTA]:</strong> 👉 <strong>Protege a tu peludo antes de que sea tarde. Realiza el test gratuito en nuestra web y asegura tu cupo fundador en Ibarra y todo el país.</strong></p>
+    </div>
+
+    <!-- Copy 3 -->
+    <div class="script-box">
+      <div style="font-weight: 800; color: #2563eb; margin-bottom: 6px;">COPY 3: Ángulo "Gatos y Dolor Silencioso" (Especial Felinos)</div>
+      <p><strong>[Problema]:</strong> Los gatos son maestros absolutos en ocultar el dolor y las enfermedades.</p>
+      <p><strong>[Agitación]:</strong> En la naturaleza, mostrar dolor significa ser presa fácil. Por eso tu gato no llorará; simplemente dormirá un poco más o se aislará debajo de la cama. Cuando la mayoría de tutores en Ecuador lo llevan al veterinario, problemas renales o infecciones urinarias ya están en fases críticas.</p>
+      <p><strong>[Solución]:</strong> El collar <strong>PETLINGO IA Felino</strong> cuenta con broche de seguridad anti-ahorque y micro-acelerómetros que detectan cambios milimétricos en su comportamiento diario, traduciendo si está relajado, estresado o manifestando malestar biológico.</p>
+      <p><strong>[CTA]:</strong> 👉 <strong>Descubre el estado emocional y de salud de tu gato hoy. Ingresa a la evaluación y reserva tu collar inteligente con envío a domicilio.</strong></p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <h3>2. Dos Guiones Técnicos para Video Corto (Reels / TikTok de 30 Segundos)</h3>
+
+    <!-- Guión 1 -->
+    <div class="script-box">
+      <div style="font-weight: 800; color: #7c3aed; margin-bottom: 8px;">GUIÓN 1: "El Teléfono del Veterinario vs. Lo Que Realmente Siente Tu Perro"</div>
+      
+      <div class="script-step">
+        <span class="step-time">00:00 - 00:03 | Gancho Disruptivo (Hook):</span><br>
+        <strong>Visual:</strong> Creador mira fijamente a la cámara con expresión seria sosteniendo a su perro. Texto grande en pantalla: <em>"¿Tu perro realmente está bien o solo está ocultando su dolor?"</em><br>
+        <strong>Audio/Voz:</strong> "La última vez que lo llevaste a revisión... ¿el veterinario estuvo más pendiente de su teléfono que de tu mascota?"
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:03 - 00:15 | Agitación de la Fricción:</span><br>
+        <strong>Visual:</strong> Tomas rápidas de un perro decaído en el suelo, seguido de una captura real de reseña de Google Maps: <em>"Pasó un mes sufriendo por un mal diagnóstico"</em>.<br>
+        <strong>Audio/Voz:</strong> "Pasa todos los días en Ecuador. Pagas consultas, te dicen 'véale cómo sigue' y tu perrito pasa semanas sufriendo en silencio porque no te puede decir qué le duele."
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:15 - 00:25 | Presentación de la Solución (Prueba de Concepto):</span><br>
+        <strong>Visual:</strong> Se muestra el collar PETLINGO IA colocándose en el perro. Transición a pantalla de celular donde se lee en vivo: <em>"Max: 96% Feliz • Ritmo Cardíaco Óptimo • Alerta: Cero Estrés"</em>.<br>
+        <strong>Audio/Voz:</strong> "Por eso creamos PETLINGO IA. El primer collar inteligente que traduce los movimientos y signos de tu mascota en emociones y alertas de salud directamente a tu celular."
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:25 - 00:30 | Llamado a la Acción (CTA):</span><br>
+        <strong>Visual:</strong> Botón interactivo en pantalla y flecha hacia la descripción: <em>"Califica a tu mascota en el link"</em>.<br>
+        <strong>Audio/Voz:</strong> "Entra al enlace de nuestro perfil, haz la evaluación de 1 minuto y asegura tu collar en la preventa exclusiva desde Ibarra para todo Ecuador."
+      </div>
+    </div>
+
+    <!-- Guión 2 -->
+    <div class="script-box">
+      <div style="font-weight: 800; color: #7c3aed; margin-bottom: 8px;">GUIÓN 2: "La Ansiedad Silenciosa Cuando Sales de Casa"</div>
+      
+      <div class="script-step">
+        <span class="step-time">00:00 - 00:03 | Gancho Disruptivo (Hook):</span><br>
+        <strong>Visual:</strong> Tutor cerrando la puerta del departamento. Cámara enfoca al perro mirando fijamente con ojos tristes. Sonido de latido cardíaco acelerado.<br>
+        <strong>Audio/Voz:</strong> "Esto es lo que tu perro siente cada vez que cierras la puerta y te vas a trabajar."
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:03 - 00:15 | Agitación de la Fricción:</span><br>
+        <strong>Visual:</strong> Notificaciones simuladas de vecinos quejándose o el tutor en la oficina sintiendo culpa.<br>
+        <strong>Audio/Voz:</strong> "No siempre rompen zapatos. La mayoría sufre taquicardia y ansiedad silenciosa durante horas. Llegas a casa, te mueve la cola y crees que no pasó nada... pero su cuerpo acumula estrés."
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:15 - 00:25 | Presentación de la Solución:</span><br>
+        <strong>Visual:</strong> El usuario abre la app de Petlingo IA en su oficina y ve un gráfico de tranquilidad en verde: <em>"Estado: Durmiendo plácidamente (Calma 92%)"</em>.<br>
+        <strong>Audio/Voz:</strong> "Con Petlingo IA sabes en tiempo real si está tranquilo, si durmió o si necesita atención. Inteligencia Artificial médica y emocional en su cuello."
+      </div>
+
+      <div class="script-step">
+        <span class="step-time">00:25 - 00:30 | Llamado a la Acción (CTA):</span><br>
+        <strong>Visual:</strong> Mockup del producto con bandera de Ecuador y texto: <em>"Lote Fundador Disponible"</em>.<br>
+        <strong>Audio/Voz:</strong> "No adivines más. Toca el botón abajo, califica tu caso y obtén acceso prioritario al lote fundador."
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
