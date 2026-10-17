@@ -34,6 +34,9 @@ export default function AdminDashboard() {
   const [filterTemp, setFilterTemp] = useState<string>('ALL');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<'B2C' | 'B2B'>('B2C');
+  const [b2bLeads, setB2bLeads] = useState<any[]>([]);
+  const [b2bSearch, setB2bSearch] = useState('');
   const [editingNotesId, setEditingNotesId] = useState<string | null>(null);
   const [tempNotes, setTempNotes] = useState<{ [id: string]: string }>({});
   const [savingId, setSavingId] = useState<string | null>(null);
@@ -55,10 +58,17 @@ export default function AdminDashboard() {
   const fetchLeads = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/leads');
-      const data = await res.json();
-      if (data.leads) {
-        setLeads(data.leads);
+      const [resB2c, resB2b] = await Promise.all([
+        fetch('/api/leads'),
+        fetch('/api/b2b-leads')
+      ]);
+      const dataB2c = await resB2c.json();
+      if (dataB2c.leads) {
+        setLeads(dataB2c.leads);
+      }
+      const dataB2b = await resB2b.json();
+      if (dataB2b.leads) {
+        setB2bLeads(dataB2b.leads);
       }
     } catch (err) {
       console.error('Error fetching leads:', err);
@@ -232,7 +242,157 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Metrics Bar */}
+      {/* Tab Switcher: B2C Leads vs B2B Partners */}
+      <div className="max-w-7xl mx-auto pt-6 flex items-center space-x-3">
+        <button
+          onClick={() => setActiveTab('B2C')}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+            activeTab === 'B2C'
+              ? 'bg-gradient-to-r from-brand-violet to-brand-purple text-white shadow-lg glow-violet'
+              : 'bg-petdark-900 text-slate-400 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Flame className="w-4 h-4 text-rose-400" />
+          <span>Leads B2C Calificados ({leads.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('B2B')}
+          className={`flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all ${
+            activeTab === 'B2B'
+              ? 'bg-gradient-to-r from-brand-cyan to-teal-500 text-slate-950 shadow-lg glow-cyan'
+              : 'bg-petdark-900 text-slate-400 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Sparkles className="w-4 h-4 text-brand-cyan" />
+          <span>Veterinarias & Pet Shops B2B ({b2bLeads.length})</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded bg-black/40 font-bold ml-1 text-brand-cyan">Apify</span>
+        </button>
+      </div>
+
+      {activeTab === 'B2B' ? (
+        <div className="max-w-7xl mx-auto space-y-4 pt-6">
+          <div className="glass-card rounded-2xl p-5 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <span>Directorio B2B Extraído con Apify (Google Maps)</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30">
+                  {b2bLeads.length} Establecimientos
+                </span>
+              </h3>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Clínicas veterinarias y pet shops en Ibarra y Quito para acuerdos de distribución, preventa y puntos de exhibición de Petlingo IA.
+              </p>
+            </div>
+
+            <div className="relative w-full sm:w-72">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Buscar veterinaria, ciudad..."
+                value={b2bSearch}
+                onChange={(e) => setB2bSearch(e.target.value)}
+                className="w-full bg-petdark-900 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-cyan"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {b2bLeads
+              .filter((item) =>
+                item.name.toLowerCase().includes(b2bSearch.toLowerCase()) ||
+                item.address.toLowerCase().includes(b2bSearch.toLowerCase()) ||
+                item.city.toLowerCase().includes(b2bSearch.toLowerCase())
+              )
+              .map((place) => {
+                const cleanPhone = place.phone ? place.phone.replace(/[^0-9]/g, '') : '';
+                const waNumber = cleanPhone.startsWith('0')
+                  ? '593' + cleanPhone.substring(1)
+                  : cleanPhone.startsWith('593')
+                  ? cleanPhone
+                  : '593' + cleanPhone;
+
+                const waPitch = encodeURIComponent(
+                  `Hola equipo de ${place.name}, les saludamos desde Ibarra del proyecto Petlingo IA. Desarrollamos el primer collar inteligente con IA para traducir emociones y monitorear la salud de mascotas. Nos encantaría presentarles una alianza para que sus clientes puedan conocer la tecnología en su establecimiento. ¿Tienen 2 minutos para coordinar?`
+                );
+
+                return (
+                  <div
+                    key={place.id}
+                    className="glass-card rounded-2xl p-5 border border-slate-800 hover:border-brand-cyan/40 transition-colors flex flex-col justify-between"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                          {place.category}
+                        </span>
+                        {place.rating && (
+                          <span className="text-xs font-bold text-amber-400 flex items-center gap-1">
+                            ⭐ {place.rating} ({place.reviewsCount})
+                          </span>
+                        )}
+                      </div>
+
+                      <h4 className="text-base font-bold text-white leading-snug">{place.name}</h4>
+
+                      <p className="text-xs text-slate-400 flex items-start gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-brand-cyan shrink-0 mt-0.5" />
+                        <span>{place.address}</span>
+                      </p>
+                    </div>
+
+                    <div className="pt-4 mt-4 border-t border-slate-800 space-y-2">
+                      <div className="flex items-center justify-between text-xs font-mono text-slate-300">
+                        <span>Teléfono:</span>
+                        <span className="font-bold text-brand-cyan">{place.phone}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2 pt-1">
+                        {place.phone !== 'No disponible' ? (
+                          <a
+                            href={`https://wa.me/${waNumber}?text=${waPitch}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-1 inline-flex items-center justify-center space-x-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors"
+                          >
+                            <MessageCircle className="w-3.5 h-3.5" />
+                            <span>WhatsApp Alianza</span>
+                          </a>
+                        ) : null}
+
+                        {place.googleMapsUrl && (
+                          <a
+                            href={place.googleMapsUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs border border-slate-700"
+                            title="Ver en Google Maps"
+                          >
+                            📍
+                          </a>
+                        )}
+
+                        {place.website && (
+                          <a
+                            href={place.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-brand-cyan text-xs border border-slate-700"
+                            title="Visitar Sitio Web"
+                          >
+                            🌐
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Metrics Bar */}
       <div className="max-w-7xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 py-6">
         <div className="glass-card rounded-2xl p-4 border border-rose-500/20 bg-rose-950/10">
           <div className="flex items-center justify-between text-xs text-rose-300 mb-1">
@@ -594,6 +754,8 @@ export default function AdminDashboard() {
           })
         )}
       </div>
+        </>
+      )}
     </div>
   );
 }
