@@ -16,57 +16,82 @@ if (!apifyToken && fs.existsSync(envPath)) {
 
 if (!apifyToken) {
   console.error('❌ ERROR: No se encontró APIFY_API_TOKEN en el archivo .env');
-  console.log('👉 Por favor copia tu token de https://console.apify.com/account/integrations y pégalo en .env');
   process.exit(1);
 }
 
 const client = new ApifyClient({ token: apifyToken });
 
 async function runScraper() {
-  console.log('🚀 Iniciando scraping optimizado para PLAN GRATUITO de Apify...');
-  console.log('🎯 Objetivos: Veterinarias y Pet Shops en Ibarra y Quito (Ecuador)');
+  console.log('🚀 Iniciando scraping a escala nacional para PETLINGO IA (Presupuesto objetivo: ~$2 USD)...');
+  console.log('🎯 Ciudades objetivo: Ibarra, Otavalo, Quito, Cumbayá, Guayaquil, Cuenca, Ambato.');
 
-  // Parámetros de búsqueda con LÍMITES ESTRICTOS para cuidar tu saldo gratis ($5 USD)
-  // 30 resultados consumen aproximadamente $0.15 a $0.25 USD del crédito gratuito.
+  // Configuración calculada para consumir aprox. $1.80 - $2.00 USD de los créditos de Apify
+  // 11 búsquedas x ~35-40 lugares = ~400 a 450 establecimientos veterinarios y pet shops en Ecuador
   const input = {
     searchStringsArray: [
+      // 1. Zona Local e Imbabura (Prioridad 1)
       'veterinarias en Ibarra Ecuador',
-      'pet shop en Ibarra Ecuador',
-      'veterinarias en Quito Ecuador'
+      'pet shops en Ibarra Ecuador',
+      'clinica veterinaria Otavalo Ecuador',
+      
+      // 2. Pichincha / Quito & Valles (Zona de mayor volumen)
+      'clinica veterinaria Quito norte Ecuador',
+      'pet shop Cumbaya Quito Ecuador',
+      'veterinaria Valle de los Chillos Ecuador',
+      
+      // 3. Guayas / Guayaquil (Gran mercado comercial)
+      'clinica veterinaria Samborondon Guayaquil',
+      'pet shop Urdesa Guayaquil Ecuador',
+      'veterinaria Ceibos Guayaquil',
+
+      // 4. Azuay & Sierra Centro
+      'clinica veterinaria Cuenca Ecuador',
+      'pet shop Ambato Ecuador'
     ],
-    maxCrawledPlacesPerSearch: 10, // Máximo 10 por búsqueda = 30 resultados en total
+    maxCrawledPlacesPerSearch: 35, // ~35 por búsqueda = hasta ~380-400 lugares
     language: 'es',
     includeOpeningHours: false,
-    includeReviews: false, // Desactivar para ahorrar procesamiento y costo
-    includeImages: false,  // Desactivar para ahorrar procesamiento y costo
+    includeReviews: false, // Desactivado para ahorrar cómputo y optimizar costos
+    includeImages: false,  // Desactivado para ahorrar cómputo y optimizar costos
   };
 
   try {
-    // Usamos el actor oficial de Google Maps en Apify
+    console.log('⏳ Enviando tarea al actor Google Maps en Apify...');
     const run = await client.actor('compass/crawler-google-places').call(input);
 
     console.log(`✅ Extracción completada en Apify. ID de ejecución: ${run.id}`);
-    console.log(`📦 Descargando dataset...`);
+    console.log(`📦 Descargando dataset completo de establecimientos...`);
 
-    const { items } = await client.dataset(run.defaultDatasetId).listItems();
+    const { items } = await client.dataset(run.defaultDatasetId).listItems({ limit: 1000 });
 
-    console.log(`✨ Se obtuvieron ${items.length} prospectos comerciales.`);
+    console.log(`✨ Total de establecimientos obtenidos: ${items.length}`);
 
-    // Estructurar los datos relevantes para el equipo comercial de Petlingo IA
-    const leads = items.map((place, idx) => ({
-      id: `scraped-${idx + 1}`,
-      name: place.title || 'Sin nombre',
-      category: place.categoryName || 'Veterinaria / Pet Shop',
-      phone: place.phone || place.phoneUnformatted || 'No disponible',
-      address: place.address || place.street || 'Ibarra / Ecuador',
-      city: place.city || (place.address?.includes('Ibarra') ? 'Ibarra' : 'Quito'),
-      website: place.website || null,
-      rating: place.totalScore || null,
-      reviewsCount: place.reviewsCount || 0,
-      googleMapsUrl: place.url || null,
-    }));
+    // Limpieza y estructuración de datos para el equipo de ventas
+    const leads = items.map((place, idx) => {
+      // Detección de ciudad basada en dirección o búsqueda
+      let city = 'Ecuador';
+      const addr = (place.address || '').toLowerCase();
+      if (addr.includes('ibarra')) city = 'Ibarra';
+      else if (addr.includes('otavalo')) city = 'Otavalo';
+      else if (addr.includes('cumbay') || addr.includes('quito') || addr.includes('chillos') || addr.includes('tumbaco')) city = 'Quito';
+      else if (addr.includes('guayaquil') || addr.includes('samborond') || addr.includes('daule')) city = 'Guayaquil';
+      else if (addr.includes('cuenca')) city = 'Cuenca';
+      else if (addr.includes('ambato')) city = 'Ambato';
 
-    // Asegurar directorio data/
+      return {
+        id: `b2b-${idx + 1}`,
+        name: place.title || 'Establecimiento sin nombre',
+        category: place.categoryName || 'Veterinaria / Tienda de Mascotas',
+        phone: place.phone || place.phoneUnformatted || 'No disponible',
+        address: place.address || place.street || 'Ecuador',
+        city,
+        website: place.website || null,
+        rating: place.totalScore || null,
+        reviewsCount: place.reviewsCount || 0,
+        googleMapsUrl: place.url || null,
+      };
+    });
+
     const dataDir = path.resolve(process.cwd(), 'data');
     if (!fs.existsSync(dataDir)) {
       fs.mkdirSync(dataDir, { recursive: true });
@@ -75,10 +100,9 @@ async function runScraper() {
     const outputPath = path.join(dataDir, 'pet_shops_ecuador.json');
     fs.writeFileSync(outputPath, JSON.stringify(leads, null, 2), 'utf-8');
 
-    console.log(`💾 Prospectos guardados exitosamente en: ${outputPath}`);
-    console.table(leads.slice(0, 5).map(l => ({ Nombre: l.name, Ciudad: l.city, Teléfono: l.phone })));
+    console.log(`💾 Base de datos comercial B2B actualizada con ${leads.length} prospectos en: ${outputPath}`);
   } catch (err) {
-    console.error('❌ Error durante la ejecución de Apify:', err.message);
+    console.error('❌ Error durante la extracción:', err.message);
   }
 }
 
