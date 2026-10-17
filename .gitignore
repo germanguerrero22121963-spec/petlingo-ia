@@ -1,9 +1,10 @@
-# Environment variables
+# Environment variables and local backups
 .env
 .env*.local
 .env.development
 .env.test
 .env.production
+backup_snapshot_17oct/
 
 # Dependencies
 node_modules/
