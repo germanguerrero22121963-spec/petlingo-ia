@@ -1,0 +1,29 @@
+# Environment variables
+.env
+.env*.local
+.env.development
+.env.test
+.env.production
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build and cache
+dist/
+build/
+.next/
+out/
+.cache/
+.vercel/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# System Files
+.DS_Store
+Thumbs.db
