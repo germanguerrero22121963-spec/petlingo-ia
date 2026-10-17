@@ -1,9 +1,18 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { isRequestAuthenticated } from '@/lib/auth';
 
 export async function GET(request: Request) {
   try {
+    // Protección de acceso al directorio de contactos comerciales
+    if (!isRequestAuthenticated(request)) {
+      return NextResponse.json(
+        { error: 'Acceso no autorizado al directorio comercial' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const download = searchParams.get('download');
 

@@ -43,18 +43,55 @@ export default function AdminDashboard() {
   const [tempNotes, setTempNotes] = useState<{ [id: string]: string }>({});
   const [savingId, setSavingId] = useState<string | null>(null);
 
-  // Clave de acceso administrativa (configurable en producción)
-  const ADMIN_PASS = 'petlingo2026';
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwordInput.trim() === ADMIN_PASS || passwordInput.trim() === 'admin123') {
-      setIsAuthenticated(true);
-      setAuthError('');
-      fetchLeads();
-    } else {
-      setAuthError('Contraseña incorrecta. Inténtalo de nuevo.');
+  // Comprobar sesión de administrador en el servidor al cargar
+  useEffect(() => {
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/admin/auth');
+        const data = await res.json();
+        if (data.authenticated) {
+          setIsAuthenticated(true);
+          fetchLeads();
+        }
+      } catch (err) {
+        console.error('Error verificando sesión:', err);
+      }
     }
+    checkAuth();
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError('');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: passwordInput.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setIsAuthenticated(true);
+        setPasswordInput('');
+        fetchLeads();
+      } else {
+        setAuthError(data.error || 'Contraseña incorrecta. Inténtalo de nuevo.');
+      }
+    } catch (err) {
+      setAuthError('Error de conexión con el servidor.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth', { method: 'DELETE' });
+    } catch (e) {}
+    setIsAuthenticated(false);
+    setLeads([]);
+    setB2bLeads([]);
   };
 
   const fetchLeads = async () => {
@@ -244,7 +281,7 @@ export default function AdminDashboard() {
             <span>Actualizar</span>
           </button>
           <button
-            onClick={() => setIsAuthenticated(false)}
+            onClick={handleLogout}
             className="text-xs text-slate-400 hover:text-rose-400 px-3 py-2 rounded-xl border border-slate-800 hover:border-rose-900/50 transition-colors"
           >
             Cerrar Sesión

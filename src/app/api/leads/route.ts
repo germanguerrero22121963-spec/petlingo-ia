@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin, isSupabaseConfigured } from '@/lib/supabase';
 import { calculateLeadScore } from '@/lib/scoring';
 import { Lead } from '@/types/database';
+import { isRequestAuthenticated } from '@/lib/auth';
 
 // Memoria volátil temporal en caso de que aún no se hayan pegado las claves de Supabase
 let inMemoryLeads: Lead[] = [
@@ -82,8 +83,16 @@ function sortLeads(leads: Lead[]) {
   });
 }
 
-// GET: Obtener lista de leads calificados
-export async function GET() {
+// GET: Obtener lista de leads calificados (Protegido para Administradores)
+export async function GET(request: Request) {
+  // Verificación estricta de sesión de administrador en el servidor
+  if (!isRequestAuthenticated(request)) {
+    return NextResponse.json(
+      { error: 'Acceso no autorizado. Se requiere sesión de administrador activa.' },
+      { status: 401 }
+    );
+  }
+
   if (isSupabaseConfigured && supabaseAdmin) {
     const { data, error } = await supabaseAdmin
       .from('leads')
@@ -109,7 +118,26 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { full_name, email, phone, city, pet_type, pet_name, answers } = body;
+    const { 
+      full_name, 
+      email, 
+      phone, 
+      city, 
+      pet_type, 
+      pet_name, 
+      answers,
+      honeypot, // Campo trampa anti-bot
+      website_url // Campo trampa anti-bot secundario
+    } = body;
+
+    // 1. Trampa Anti-Bot (Honeypot): Si un bot llena estos campos invisibles, se descarta silenciosamente
+    if (honeypot || website_url) {
+      return NextResponse.json({ 
+        success: true, 
+        lead: { id: 'filtered-bot', temperature: 'COLD' }, 
+        source: 'bot_protection' 
+      });
+    }
 
     if (!full_name || !phone || !answers) {
       return NextResponse.json(
@@ -118,17 +146,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // 2. Sanitización estricta contra inyección XSS y desbordamiento de campos
+    const cleanFullName = String(full_name).replace(/<[^>]*>?/gm, '').trim().substring(0, 100);
+    const cleanPhone = String(phone).replace(/[^0-9+ -]/g, '').trim().substring(0, 30);
+    const cleanEmail = email ? String(email).replace(/<[^>]*>?/gm, '').trim().substring(0, 120) : '';
+    const cleanCity = city ? String(city).replace(/<[^>]*>?/gm, '').trim().substring(0, 60) : (answers.city || 'Ecuador');
+    const cleanPetType = pet_type ? String(pet_type).replace(/<[^>]*>?/gm, '').trim().substring(0, 50) : (answers.petType || 'Mascota');
+    const cleanPetName = pet_name ? String(pet_name).replace(/<[^>]*>?/gm, '').trim().substring(0, 60) : (answers.petName || '');
+
     const { score, temperature } = calculateLeadScore(answers);
 
     const newLead: Lead = {
       id: typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `lead-${Date.now()}`,
       created_at: new Date().toISOString(),
-      full_name,
-      email: email || '',
-      phone,
-      city: city || answers.city || 'Ecuador',
-      pet_type: pet_type || answers.petType || 'Mascota',
-      pet_name: pet_name || answers.petName || '',
+      full_name: cleanFullName,
+      email: cleanEmail,
+      phone: cleanPhone,
+      city: cleanCity,
+      pet_type: cleanPetType,
+      pet_name: cleanPetName,
       answers,
       score,
       temperature,
@@ -155,9 +191,17 @@ export async function POST(request: Request) {
   }
 }
 
-// PATCH: Actualizar estado de contacto (Contactado / No contactado) y notas
+// PATCH: Actualizar estado de contacto (Contactado / No contactado) y notas (Protegido)
 export async function PATCH(request: Request) {
   try {
+    // Verificación estricta de sesión de administrador en el servidor
+    if (!isRequestAuthenticated(request)) {
+      return NextResponse.json(
+        { error: 'Acceso no autorizado. Se requiere sesión de administrador activa.' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { id, status, agent_notes } = body;
 
@@ -165,9 +209,11 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ error: 'ID y estado son requeridos' }, { status: 400 });
     }
 
+    const cleanNotes = agent_notes !== undefined ? String(agent_notes).replace(/<[^>]*>?/gm, '').trim().substring(0, 500) : undefined;
+
     const updateFields: Partial<Lead> = {
       status,
-      ...(agent_notes !== undefined ? { agent_notes } : {}),
+      ...(cleanNotes !== undefined ? { agent_notes: cleanNotes } : {}),
       ...(status === 'CONTACTADO' ? { contacted_at: new Date().toISOString() } : {}),
     };
 

@@ -44,6 +44,7 @@ export default function ScoringForm() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
   const [leadResult, setLeadResult] = useState<any>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -84,6 +85,7 @@ export default function ScoringForm() {
           pet_type: formData.petType,
           pet_name: formData.petName,
           answers,
+          honeypot,
         }),
       });
 
@@ -192,6 +194,18 @@ export default function ScoringForm() {
             /* Active Form */
             <form onSubmit={handleSubmit} className="space-y-8">
               
+              {/* Trampa Honeypot invisible para humanos, trampa para bots */}
+              <div className="hidden" aria-hidden="true" style={{ display: 'none' }}>
+                <input
+                  type="text"
+                  name="website_url"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(e) => setHoneypot(e.target.value)}
+                />
+              </div>
+
               {/* Bloque 1: Perfil de la Mascota */}
               <div className="space-y-4">
                 <h4 className="text-sm font-bold uppercase tracking-wider text-brand-cyan flex items-center gap-2">
